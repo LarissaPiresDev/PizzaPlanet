@@ -9,3 +9,5 @@ app.config['PORT']=5003
 app.config['DEBUG'] = True
 app.config["SQLALCHEMY_DATABASE_URI"] = "sqlite:///app.db"
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
+
+db = SQLAlchemy(app)

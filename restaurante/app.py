@@ -1,12 +1,10 @@
 from flask_sqlalchemy import SQLAlchemy
 from routes.cliente_routes import cliente_bp
-from config import app,db
+from config import app, db
+from routes.cliente_routes import cliente_bp
 
 
-
-db = SQLAlchemy(app)
-
-
+app.register_blueprint(cliente_bp)
 
 
 with app.app_context():
