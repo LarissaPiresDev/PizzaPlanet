@@ -16,6 +16,8 @@ app.register_blueprint(itemcardapio_bp)
 app.register_blueprint(itempedido_bp)
 app.register_blueprint(pedido_bp)
 
+from schemas import ma  
+ma.init_app(app)
 
 with app.app_context():
     db.create_all()
