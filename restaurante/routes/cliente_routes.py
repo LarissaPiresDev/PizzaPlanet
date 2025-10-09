@@ -62,3 +62,13 @@ def atualizar_cliente(id):
     return jsonify({"mensagem": "Cliente atualizado"})
 
 
+@cliente_bp.route('/clientes/<int:id>', methods=['DELETE'])
+def deletar_cliente(id):
+    cliente = Cliente.query.get(id)
+    if not cliente:
+        return jsonify({"erro": "Cliente não encontrado"}), 404
+
+    db.session.delete(cliente)
+    db.session.commit()
+
+    return jsonify({"mensagem": "Cliente deletado com sucesso"}), 204
