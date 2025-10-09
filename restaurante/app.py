@@ -1,10 +1,20 @@
 from flask_sqlalchemy import SQLAlchemy
 from routes.cliente_routes import cliente_bp
 from config import app, db
+
 from routes.cliente_routes import cliente_bp
+from routes.funcionario_routes import funcionario_bp
+from routes.itemcardapio_routes import itemcardapio_bp
+from routes.itempedido_routes import itempedido_bp
+from routes.pedido_routes import pedido_bp
+
 
 
 app.register_blueprint(cliente_bp)
+app.register_blueprint(funcionario_bp)
+app.register_blueprint(itemcardapio_bp)
+app.register_blueprint(itempedido_bp)
+app.register_blueprint(pedido_bp)
 
 
 with app.app_context():
