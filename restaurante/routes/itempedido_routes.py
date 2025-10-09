@@ -65,5 +65,13 @@ def atualizar_item(id):
     db.session.commit()
     return jsonify({"mensagem": "Item do pedido atualizado", "id": item.id, "subtotal": item.subtotal})
 
+@itempedido_bp.route('/itempedido/<int:id>', methods=['DELETE'])
+def deletar_item(id):
+    item = ItemPedido.query.get(id)
+    if not item:
+        return jsonify({"erro": "Item do pedido não encontrado"}), 404
 
+    db.session.delete(item)
+    db.session.commit()
+    return jsonify({"mensagem": "Item do pedido deletado", "id": id}), 204
 
