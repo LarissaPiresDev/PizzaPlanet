@@ -32,7 +32,18 @@ def criar_item():
     db.session.commit()
     return jsonify({"mensagem": "Item criado com sucesso", "id": item.id}), 201
 
+@itemcardapio_bp.route('/itemcardapio/<int:id>', methods=['PUT'])
+def atualizar_item(id):
+    item = ItemCardapio.query.get(id)
+    if not item:
+        return jsonify({"erro": "Item não encontrado"}), 404
 
+    dados = request.json
+    if "nome" in dados: item.nome = dados["nome"]
+    if "preco" in dados: item.preco = dados["preco"]
+    if "descricao" in dados: item.descricao = dados["descricao"]
 
+    db.session.commit()
+    return jsonify({"mensagem": "Item atualizado com sucesso", "id": item.id})
 
 
