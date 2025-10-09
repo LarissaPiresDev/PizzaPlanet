@@ -18,3 +18,21 @@ def listar_item_por_id(id):
         return jsonify({"erro": "Item não encontrado"}), 404
     schema = ItemCardapioSchema()
     return jsonify(schema.dump(item))
+
+@itemcardapio_bp.route('/itemcardapio', methods=['POST'])
+def criar_item():
+    dados = request.json
+    schema = ItemCardapioSchema()
+    try:
+        item = schema.load(dados, session=db.session)
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 400
+
+    db.session.add(item)
+    db.session.commit()
+    return jsonify({"mensagem": "Item criado com sucesso", "id": item.id}), 201
+
+
+
+
+
