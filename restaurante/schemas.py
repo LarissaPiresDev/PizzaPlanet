@@ -72,5 +72,6 @@ class ItemPedidoSchema(ma.SQLAlchemyAutoSchema):
         load_instance = True
 
     pedido_id = ma.Int(required=True)
+    item_cardapio_id = ma.Int(required=True)
     quantidade = ma.Int(required=True)
     subtotal = ma.Float(required=True)

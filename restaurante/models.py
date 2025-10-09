@@ -39,3 +39,9 @@ class ItemPedido(db.Model):
     subtotal = db.Column(db.Float)
 
     pedido_id = db.Column(db.Integer, db.ForeignKey('pedido.id_pedido'))
+    item_cardapio_id = db.Column(db.Integer, db.ForeignKey('item_cardapio.id'))
+
+    item_cardapio = db.relationship("ItemCardapio")
+    
+    def calcular_subtotal(self):
+        self.subtotal = self.quantidade * self.item_cardapio.preco
