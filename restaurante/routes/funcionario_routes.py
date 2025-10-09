@@ -47,5 +47,13 @@ def atualizar_funcionario(id):
     db.session.commit()
     return jsonify({"mensagem": "Funcionário atualizado com sucesso", "id": funcionario.id})
 
+@funcionario_bp.route('/funcionarios/<int:id>', methods=['DELETE'])
+def deletar_funcionario(id):
+    funcionario = Funcionario.query.get(id)
+    if not funcionario:
+        return jsonify({"erro": "Funcionário não encontrado"}), 404
 
+    db.session.delete(funcionario)
+    db.session.commit()
+    return jsonify({"mensagem": "Funcionário deletado com sucesso", "id": id}), 204
 
