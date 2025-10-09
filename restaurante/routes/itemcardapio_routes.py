@@ -46,4 +46,12 @@ def atualizar_item(id):
     db.session.commit()
     return jsonify({"mensagem": "Item atualizado com sucesso", "id": item.id})
 
+@itemcardapio_bp.route('/itemcardapio/<int:id>', methods=['DELETE'])
+def deletar_item(id):
+    item = ItemCardapio.query.get(id)
+    if not item:
+        return jsonify({"erro": "Item não encontrado"}), 404
 
+    db.session.delete(item)
+    db.session.commit()
+    return jsonify({"mensagem": "Item deletado com sucesso", "id": id}), 204
