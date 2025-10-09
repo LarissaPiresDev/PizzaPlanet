@@ -15,15 +15,32 @@ def listar_clientes():
 
 @cliente_bp.route('/clientes', methods=['POST'])
 def criar_cliente():
-    data = request.get_json()
+    dados = request.get_json()
     try:
-        cliente = cliente_schema.load(data)
+        cliente = cliente_schema.load(dados)
         db.session.add(cliente)
         db.session.commit()
         return cliente_schema.jsonify(cliente), 201
     except Exception as e:
         db.session.rollback()
         return jsonify({"erro": str(e)}), 400
+    
+
+@cliente_bp.route('/clientes/<int:id>', methods=['GET'])
+def listar_cliente_por_id(id):
+    cliente = Cliente.query.get(id)
+    if not cliente:
+        return jsonify({"erro": "Cliente não encontrado"}), 404
+
+    return jsonify({
+        "id": cliente.id,
+        "nome": cliente.nome,
+        "cpf": cliente.cpf,
+        "numero_telefone": cliente.numero_telefone,
+        "endereco": cliente.endereco
+    })
+
+
 
 
 
