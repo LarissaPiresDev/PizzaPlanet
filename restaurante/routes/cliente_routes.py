@@ -41,6 +41,24 @@ def listar_cliente_por_id(id):
     })
 
 
+@cliente_bp.route('/clientes/<int:id>', methods=['PUT'])
+def atualizar_cliente(id):
+    cliente = Cliente.query.get(id)
+    if not cliente:
+        return jsonify({"erro": "Cliente não encontrado"}), 404
 
+    dados = request.json
+
+    if "nome" in dados:
+        cliente.nome = dados["nome"]
+    if "cpf" in dados:
+        cliente.cpf = dados["cpf"]
+    if "numero_telefone" in dados:
+        cliente.numero_telefone = dados["numero_telefone"]
+    if "endereco" in dados:
+        cliente.endereco = dados["endereco"]
+
+    db.session.commit()
+    return jsonify({"mensagem": "Cliente atualizado"})
 
 
