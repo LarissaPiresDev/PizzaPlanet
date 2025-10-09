@@ -43,3 +43,27 @@ def criar_item():
     db.session.add(item)
     db.session.commit()
     return jsonify({"mensagem": "Item do pedido criado", "id": item.id, "subtotal": item.subtotal}), 201
+
+@itempedido_bp.route('/itempedido/<int:id>', methods=['PUT'])
+def atualizar_item(id):
+    item = ItemPedido.query.get(id)
+    if not item:
+        return jsonify({"erro": "Item do pedido não encontrado"}), 404
+
+    dados = request.json
+    if "pedido_id" in dados:
+        item.pedido_id = dados["pedido_id"]
+    if "item_cardapio_id" in dados:
+        item.item_cardapio_id = dados["item_cardapio_id"]
+    if "quantidade" in dados:
+        item.quantidade = dados["quantidade"]
+
+    cardapio = ItemCardapio.query.get(item.item_cardapio_id)
+    if cardapio:
+        item.subtotal = item.quantidade * cardapio.preco
+
+    db.session.commit()
+    return jsonify({"mensagem": "Item do pedido atualizado", "id": item.id, "subtotal": item.subtotal})
+
+
+
