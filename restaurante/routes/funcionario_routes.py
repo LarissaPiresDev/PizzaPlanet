@@ -33,7 +33,19 @@ def criar_funcionario():
     return jsonify({"mensagem": "Funcionário criado com sucesso", "id": funcionario.id}), 201
 
 
+@funcionario_bp.route('/funcionarios/<int:id>', methods=['PUT'])
+def atualizar_funcionario(id):
+    funcionario = Funcionario.query.get(id)
+    if not funcionario:
+        return jsonify({"erro": "Funcionário não encontrado"}), 404
 
+    dados = request.json
+    if "nome" in dados: funcionario.nome = dados["nome"]
+    if "cpf" in dados: funcionario.cpf = dados["cpf"]
+    if "senha" in dados: funcionario.senha = dados["senha"]
+
+    db.session.commit()
+    return jsonify({"mensagem": "Funcionário atualizado com sucesso", "id": funcionario.id})
 
 
 
