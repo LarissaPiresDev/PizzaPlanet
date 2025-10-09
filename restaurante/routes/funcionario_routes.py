@@ -17,3 +17,23 @@ def listar_funcionario_por_id(id):
         return jsonify({"erro": "Funcionário não foi encontrado"}), 404
     return jsonify({"id": funcionario.id, "nome": funcionario.nome, "cpf": funcionario.cpf})
 
+@funcionario_bp.route('/funcionarios', methods=['POST'])
+def criar_funcionario():
+    dados = request.json
+
+    schema = FuncionarioSchema()
+    try:
+        funcionario = schema.load(dados, session=db.session)  
+    except Exception as e:
+        return jsonify({"erro": str(e)}), 400
+
+    db.session.add(funcionario)
+    db.session.commit()
+
+    return jsonify({"mensagem": "Funcionário criado com sucesso", "id": funcionario.id}), 201
+
+
+
+
+
+
