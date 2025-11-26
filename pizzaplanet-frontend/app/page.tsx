@@ -1,65 +1,57 @@
-import Image from "next/image";
-
 export default function Home() {
   return (
-    <div className="flex min-h-screen items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex min-h-screen w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the page.tsx file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
+    <div className="min-h-screen bg-gray-950 p-[clamp(20px,2vw,80px)]">
+
+      <div className="w-full bg-gray-1050 shadow-2xl shadow-green-500/40 rounded-lg 
+      p-[clamp(40px,4vw,100px)] flex min-h-[calc(100vh-200px)]">
+
+        <div className="w-1/2 pr-[clamp(20px,3vw,60px)]">
+          <h2 className="text-[clamp(32px,3vw,56px)] font-extrabold tracking-wider text-white">
+            Bem-vindo ao
+            <b className="ml-2 text-green-400 animate-pulse">Pizza Planet!</b>
+          </h2>
+
+          <p className="text-[clamp(20px,1.8vw,32px)] font-semibold text-green-400 mb-6 tracking-wide">
+            Sistema Interno de Pedidos e Gestão
           </p>
+
+          <p className="text-gray-300 text-[clamp(16px,1.2vw,22px)] leading-relaxed mb-8 tracking-wide">
+            Aqui você tem acesso rápido a todas as ferramentas necessárias para garantir que
+            a melhor pizza da galáxia chegue ao nosso cliente.
+          </p>
+
+          <div className="flex gap-4 mt-10">
+            <a
+              href="/cardapio"
+              className="bg-green-500 hover:bg-green-600 transition-all 
+    px-8 py-3 rounded-md font-semibold text-gray-900 
+    text-lg shadow-lg shadow-green-500/40"
+            >
+              Abrir Cardápio
+            </a>
+
+            <a
+              href="/pedido"
+              className="bg-gray-800 border border-green-500 hover:bg-gray-700 transition-all 
+    px-8 py-3 rounded-md font-semibold text-green-400 
+    text-lg shadow-lg shadow-green-500/20"
+            >
+              Fazer Pedido
+            </a>
+          </div>
         </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            <Image
-              className="dark:invert"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={16}
+
+        <div className="w-1/2 flex items-center justify-center rounded-md overflow-hidden p-6">
+          <div className="shadow-xl shadow-green-500/40 rounded-md max-h-[600px]">
+            <img
+              src="/astronauta.png"
+              alt="Pizza"
+              className="object-contain w-full h-full rounded-md"
             />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
-          </a>
+          </div>
         </div>
-      </main>
+
+      </div>
     </div>
   );
 }
