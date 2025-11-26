@@ -5,24 +5,29 @@ from schemas import ItemCardapioSchema
 
 itemcardapio_bp = Blueprint('itemcardapio_bp', __name__)
 
+
 @itemcardapio_bp.route('/itemcardapio', methods=['GET'])
 def listar_itens():
     itens = ItemCardapio.query.all()
     schema = ItemCardapioSchema(many=True)
-    return jsonify(schema.dump(itens))
+    return jsonify(schema.dump(itens)), 200
+
 
 @itemcardapio_bp.route('/itemcardapio/<int:id>', methods=['GET'])
 def listar_item_por_id(id):
     item = ItemCardapio.query.get(id)
     if not item:
         return jsonify({"erro": "Item não encontrado"}), 404
+
     schema = ItemCardapioSchema()
-    return jsonify(schema.dump(item))
+    return jsonify(schema.dump(item)), 200
+
 
 @itemcardapio_bp.route('/itemcardapio', methods=['POST'])
 def criar_item():
     dados = request.json
     schema = ItemCardapioSchema()
+
     try:
         item = schema.load(dados, session=db.session)
     except Exception as e:
@@ -30,7 +35,12 @@ def criar_item():
 
     db.session.add(item)
     db.session.commit()
-    return jsonify({"mensagem": "Item criado com sucesso", "id": item.id}), 201
+
+    return jsonify({
+        "mensagem": "Item criado com sucesso",
+        "id": item.id
+    }), 201
+
 
 @itemcardapio_bp.route('/itemcardapio/<int:id>', methods=['PUT'])
 def atualizar_item(id):
@@ -39,12 +49,19 @@ def atualizar_item(id):
         return jsonify({"erro": "Item não encontrado"}), 404
 
     dados = request.json
-    if "nome" in dados: item.nome = dados["nome"]
-    if "preco" in dados: item.preco = dados["preco"]
-    if "descricao" in dados: item.descricao = dados["descricao"]
+
+    item.nome = dados.get("nome", item.nome)
+    item.preco = dados.get("preco", item.preco)
+    item.descricao = dados.get("descricao", item.descricao)
+    item.imagem = dados.get("imagem", item.imagem)
 
     db.session.commit()
-    return jsonify({"mensagem": "Item atualizado com sucesso", "id": item.id})
+
+    return jsonify({
+        "mensagem": "Item atualizado com sucesso",
+        "id": item.id
+    }), 200
+
 
 @itemcardapio_bp.route('/itemcardapio/<int:id>', methods=['DELETE'])
 def deletar_item(id):
@@ -54,4 +71,8 @@ def deletar_item(id):
 
     db.session.delete(item)
     db.session.commit()
-    return jsonify({"mensagem": "Item deletado com sucesso", "id": id}), 204
+
+    return jsonify({
+        "mensagem": "Item deletado com sucesso",
+        "id": id
+    }), 200
