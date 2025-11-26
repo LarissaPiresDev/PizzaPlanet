@@ -44,13 +44,11 @@ def listar_item_por_id(id):
 def criar_item():
     dados = request.json
 
-    # Verifica se tem pedido_id
     pedido_id = dados.get("pedido_id")
     pedido = Pedido.query.get(pedido_id)
     if not pedido:
         return jsonify({"erro": "Pedido não encontrado"}), 404
 
-    # Pode receber um único item ou lista de itens
     itens = dados.get("itens", [])
     if not itens:
         return jsonify({"erro": "Nenhum item fornecido"}), 400
@@ -74,7 +72,7 @@ def criar_item():
             subtotal=subtotal
         )
         db.session.add(novo_item)
-        db.session.flush()  # Para gerar id antes de commit
+        db.session.flush()  
         criados.append({
             "id": novo_item.id,
             "item_cardapio_id": item_cardapio_id,
@@ -112,13 +110,11 @@ def atualizar_item(id):
             return jsonify({"erro": "Item do cardápio não encontrado"}), 404
         item.item_cardapio_id = dados["item_cardapio_id"]
 
-    # Recalcula subtotal
     cardapio = ItemCardapio.query.get(item.item_cardapio_id)
     item.subtotal = item.quantidade * cardapio.preco
 
     db.session.commit()
 
-    # Atualiza valor total do pedido
     pedido = Pedido.query.get(item.pedido_id)
     pedido.valor_total = sum(i.subtotal for i in pedido.itens)
     db.session.commit()
@@ -144,7 +140,6 @@ def deletar_item(id):
     db.session.delete(item)
     db.session.commit()
 
-    # Atualiza valor total do pedido
     pedido.valor_total = sum(i.subtotal for i in pedido.itens)
     db.session.commit()
 

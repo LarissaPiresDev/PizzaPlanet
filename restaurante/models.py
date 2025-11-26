@@ -16,7 +16,7 @@ class Pedido(db.Model):
     __tablename__ = "pedido"
 
     id_pedido = db.Column(db.Integer, primary_key=True)
-    nome = db.Column(db.String(100))  # <--- deve existir
+    nome = db.Column(db.String(100))
     data = db.Column(db.Date, default=datetime.utcnow)
     valor_total = db.Column(db.Float, default=0)
     status = db.Column(db.String(20), default="em_execucao")
