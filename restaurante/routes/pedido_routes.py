@@ -30,7 +30,6 @@ def listar_pedidos():
         })
     return jsonify(resultado), 200
 
-
 # ---------------------------
 # LISTAR PEDIDO POR ID
 # ---------------------------
@@ -57,7 +56,6 @@ def listar_pedido_por_id(id):
     }
     return jsonify(resultado), 200
 
-
 # ---------------------------
 # CRIAR PEDIDO
 # ---------------------------
@@ -67,7 +65,7 @@ def criar_pedido():
     nome = dados.get("nome")
     data_str = dados.get("data")
     itens = dados.get("itens", [])
-    
+
     if not nome:
         return jsonify({"erro": "O campo 'nome' é obrigatório"}), 400
 
@@ -76,9 +74,14 @@ def criar_pedido():
     except:
         return jsonify({"erro": "Formato de data inválido. Use YYYY-MM-DD"}), 400
 
-    pedido = Pedido(nome=nome, data=data_formatada)
+    pedido = Pedido(
+        nome=nome,
+        data=data_formatada,
+        valor_total=0,
+        status="em execucao"
+    )
     db.session.add(pedido)
-    db.session.commit()  # gera id_pedido
+    db.session.commit() 
 
     valor_total = 0
     for item in itens:
@@ -89,20 +92,20 @@ def criar_pedido():
         if not cardapio:
             return jsonify({"erro": f"ItemCardapio {item_cardapio_id} não encontrado"}), 404
 
+        subtotal = quantidade * cardapio.preco
         novo_item = ItemPedido(
             pedido_id=pedido.id_pedido,
             item_cardapio_id=item_cardapio_id,
-            quantidade=quantidade
+            quantidade=quantidade,
+            subtotal=subtotal
         )
-        novo_item.calcular_subtotal()
-        valor_total += novo_item.subtotal
+        valor_total += subtotal
         db.session.add(novo_item)
 
     pedido.valor_total = valor_total
     db.session.commit()
 
     return jsonify({"mensagem": "Pedido criado com sucesso", "id": pedido.id_pedido}), 201
-
 
 # ---------------------------
 # ATUALIZAR PEDIDO
@@ -115,7 +118,7 @@ def atualizar_pedido(id):
 
     dados = request.json
 
-    # Atualiza campos do pedido
+
     if "nome" in dados:
         pedido.nome = dados["nome"]
 
@@ -128,7 +131,6 @@ def atualizar_pedido(id):
     if "status" in dados:
         pedido.status = dados["status"]
 
-    # Atualiza itens do pedido se enviados
     itens_enviados = dados.get("itens")
     if itens_enviados is not None:
         ids_enviados = []
@@ -137,43 +139,43 @@ def atualizar_pedido(id):
             item_cardapio_id = i.get("item_cardapio_id")
             quantidade = i.get("quantidade", 1)
 
-            # Verifica se item_cardapio existe
             cardapio = ItemCardapio.query.get(item_cardapio_id)
             if not cardapio:
                 return jsonify({"erro": f"ItemCardapio {item_cardapio_id} não encontrado"}), 404
 
+            subtotal = quantidade * cardapio.preco
+
             if item_id:
-                # Atualiza item existente
+
                 item = ItemPedido.query.get(item_id)
                 if not item:
                     return jsonify({"erro": f"ItemPedido {item_id} não encontrado"}), 404
                 item.item_cardapio_id = item_cardapio_id
                 item.quantidade = quantidade
-                item.subtotal = quantidade * cardapio.preco
+                item.subtotal = subtotal
             else:
-                # Cria novo item
+
                 item = ItemPedido(
                     pedido_id=pedido.id_pedido,
                     item_cardapio_id=item_cardapio_id,
                     quantidade=quantidade,
-                    subtotal=quantidade * cardapio.preco
+                    subtotal=subtotal
                 )
                 db.session.add(item)
-            db.session.flush()  # Gera id do item antes de commit
+            db.session.flush() 
             ids_enviados.append(item.id)
 
-        # Remove itens que não foram enviados
+
         for item in pedido.itens:
             if item.id not in ids_enviados:
                 db.session.delete(item)
 
-    # Recalcula valor total do pedido
-    db.session.commit()  # salva alterações dos itens
+    # Recalcula valor total
+    db.session.commit()
     pedido.valor_total = sum(item.subtotal for item in pedido.itens)
     db.session.commit()
 
     return jsonify({"mensagem": "Pedido atualizado com sucesso", "id": pedido.id_pedido, "valor_total": pedido.valor_total}), 200
-
 
 # ---------------------------
 # DELETAR PEDIDO
