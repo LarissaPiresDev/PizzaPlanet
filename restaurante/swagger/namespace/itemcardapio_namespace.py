@@ -9,18 +9,17 @@ itens_ns = Namespace("itemcardapio", description="Operações relacionadas aos i
 item_schema = ItemCardapioSchema()
 itens_schema = ItemCardapioSchema(many=True)
 
-# Modelos para documentação
 item_model = itens_ns.model("ItemCardapio", {
     "nome": fields.String(required=True, description="Nome do item do cardápio"),
     "preco": fields.Float(required=True, description="Preço do item"),
     "descricao": fields.String(required=True, description="Descrição do item"),
+    "img": fields.String(required=False, description="URL da imagem do item do cardápio"),
 })
 
 item_output_model = itens_ns.inherit("ItemCardapioOutput", item_model, {
     "id": fields.Integer(description="ID do item do cardápio"),
 })
 
-# Rotas do namespace
 @itens_ns.route("/")
 class ItensResource(Resource):
     @itens_ns.marshal_list_with(item_output_model)
@@ -64,6 +63,7 @@ class ItemIdResource(Resource):
         dados = request.get_json()
         for campo, valor in dados.items():
             setattr(item, campo, valor)
+
         db.session.commit()
         return item_schema.dump(item), 200
 
